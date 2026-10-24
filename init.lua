@@ -715,7 +715,26 @@ require('lazy').setup({
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Enable the following language servers
+      -- Ruby LSP running inside Docker
+      vim.lsp.config('ruby_lsp', {
+        cmd = {
+          'docker',
+          'exec',
+          '-i',
+          '-w',
+          '/home/lars/projects/rails_app',
+          'app',
+          'bundle',
+          'exec',
+          'ruby-lsp',
+        },
+
+        filetypes = { 'ruby' },
+        root_markers = { 'Gemfile', '.git' },
+        capabilities = capabilities,
+      })
+
+      vim.lsp.enable 'ruby_lsp'
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
       --  Add any additional override configuration in the following tables. Available keys are:
@@ -1077,8 +1096,6 @@ require('lazy').setup({
         'yaml',
         'sql',
         'ruby',
-        'sass',
-        'haml',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
